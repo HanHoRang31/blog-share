@@ -161,6 +161,8 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: data
+      annotations:
+        volumeType: local
     spec:
       accessModes: ["ReadWriteOnce"]
       storageClassName: local-path
