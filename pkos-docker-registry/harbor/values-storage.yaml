@@ -319,22 +319,22 @@ persistence:
       # keys in the secret should be AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY for chartmuseum
       # keys in the secret should be REGISTRY_STORAGE_S3_ACCESSKEY and REGISTRY_STORAGE_S3_SECRETKEY for registry
       #existingSecret: ""
-      region: ap-east-1
-      bucket: test
-      accesskey: koqkS0Wl9c5pKijt
-      secretkey: yGNPpVuT6x0V8XZN9fPjP9kIM5L0Rxzj
-      regionendpoint: minio.minio.svc.cluster.local
-      encrypt: false
-      keyid: mykeyid
-      secure: true
-      skipverify: false
-      v4auth: true
-      chunksize: "5242880"
-      rootdirectory: /s3/object/name/prefix
-      storageclass: STANDARD
-      multipartcopychunksize: "33554432"
-      multipartcopymaxconcurrency: 100
-      multipartcopythresholdsize: "33554432"
+      region: us-east-1
+      bucket: minio-test
+      accesskey: hTVjYT5FAkCVoWnc
+      secretkey: gKXrHxDwTP7MzZSm64aFCGcFdIYUJ116
+      regionendpoint: http://minio.minio.svc.cluster.local:9000
+        #encrypt: false
+        #keyid: mykeyid
+        #secure: true
+        #skipverify: false
+        #v4auth: true
+        #chunksize: "5242880"
+        #rootdirectory: /s3/object/name/prefix
+        #storageclass: STANDARD
+        #multipartcopychunksize: "33554432"
+        #multipartcopymaxconcurrency: 100
+        # multipartcopythresholdsize: "33554432"
     swift:
       authurl: https://storage.myprovider.com/v3/auth
       username: username
