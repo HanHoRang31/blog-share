@@ -284,7 +284,7 @@ persistence:
     # Refer to
     # https://github.com/docker/distribution/blob/master/docs/configuration.md#redirect
     # for the detail.
-    disableredirect: false
+    disableredirect: true
     # Specify the "caBundleSecretName" if the storage service uses a self-signed certificate.
     # The secret must contain keys named "ca.crt" which will be injected into the trust store
     # of registry's and chartmuseum's containers.
@@ -294,7 +294,7 @@ persistence:
     # "oss" and fill the information needed in the corresponding section. The type
     # must be "filesystem" if you want to use persistent volumes for registry
     # and chartmuseum
-    type: filesystem 
+    type: s3
     filesystem:
       rootdirectory: /storage
       #maxthreads: 100
@@ -319,22 +319,22 @@ persistence:
       # keys in the secret should be AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY for chartmuseum
       # keys in the secret should be REGISTRY_STORAGE_S3_ACCESSKEY and REGISTRY_STORAGE_S3_SECRETKEY for registry
       #existingSecret: ""
-      region: ap-northeast-2 
-      bucket: minio-test
+      region: ap-east-1
+      bucket: test
       accesskey: koqkS0Wl9c5pKijt
       secretkey: yGNPpVuT6x0V8XZN9fPjP9kIM5L0Rxzj
-      regionendpoint: https://minio.hanhorang.link
-      #encrypt: false
-      #keyid: mykeyid
+      regionendpoint: minio.minio.svc.cluster.local
+      encrypt: false
+      keyid: mykeyid
       secure: true
-      #skipverify: false
-      #v4auth: true
-      #chunksize: "5242880"
-      #rootdirectory: /s3/object/name/prefix
-      #storageclass: STANDARD
-      #multipartcopychunksize: "33554432"
-      #multipartcopymaxconcurrency: 100
-      #multipartcopythresholdsize: "33554432"
+      skipverify: false
+      v4auth: true
+      chunksize: "5242880"
+      rootdirectory: /s3/object/name/prefix
+      storageclass: STANDARD
+      multipartcopychunksize: "33554432"
+      multipartcopymaxconcurrency: 100
+      multipartcopythresholdsize: "33554432"
     swift:
       authurl: https://storage.myprovider.com/v3/auth
       username: username

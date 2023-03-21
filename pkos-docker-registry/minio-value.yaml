@@ -378,7 +378,7 @@ provisioning:
   config:
     - name: region
       options:
-        name: ap-northeast-2
+        name: us-east-1
   ## MinIO&reg; pod Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param provisioning.podSecurityContext.enabled Enable pod Security Context
@@ -685,7 +685,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:955963799952:certificate/8790e6eb-ad80-428c-95ac-09c6dcb6e569
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:955963799952:certificate/7569648c-bfd5-4860-b2c1-16ef02acbb58
 
   ## @param ingress.tls Enable TLS configuration for the hostname defined at `ingress.hostname` parameter
   ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.hostname }}`
