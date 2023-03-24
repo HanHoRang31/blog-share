@@ -1,0 +1,6 @@
+server:
+  service:
+    type: LoadBalancer
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: argocd.hanhorang.link
+
