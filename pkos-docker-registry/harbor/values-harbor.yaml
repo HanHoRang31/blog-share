@@ -321,8 +321,8 @@ persistence:
       #existingSecret: ""
       region: us-east-1
       bucket: test
-      accesskey: S9exaVBxAlzBT0BK
-      secretkey: MqTk0PhDufrxxrCg0JbwMH0KxypmcNQ0
+      accesskey: xaozyNjvXUJBPy8Z
+      secretkey: yVAqni5PAiZMnYtFDb94LXNrTQOJk3AR
       regionendpoint: http://minio.minio.svc.cluster.local:9000
         #encrypt: false
         #keyid: mykeyid

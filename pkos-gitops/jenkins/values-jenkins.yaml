@@ -1,0 +1,22 @@
+controller:
+  adminUser: "admin"
+  adminPassword: "admin1234"
+  jenkinsUriPrefix: "/jenkins"
+    #installPlugins:
+    #- kubernetes:3734.v1fa_4c724c3b_7
+    #- workflow-aggregator:590.v6a_d052e5a_a_b_5
+    #- git:4.13.0
+    #- configuration-as-code:1569.vb_72405b_80249 
+  ingress: 
+    enabled: true
+    apiVersion: "networking.k8s.io/v1" 
+    annotations: 
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:955963799952:certificate/7569648c-bfd5-4860-b2c1-16ef02acbb58
+      alb.ingress.kubernetes.io/healthcheck-path: /login
+      kubernetes.io/ingress.class: alb
+      ingressClassName: alb
+    hostName: jenkins.hanhorang.link
+    
