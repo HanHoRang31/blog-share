@@ -1,0 +1,26 @@
+objstoreConfig: |-
+  type: s3
+  config:
+    bucket: monitoring
+    endpoint: minio.minio.svc.cluster.local:9000
+    access_key: lHM4rvFtJlTh3va0
+    secret_key: oYi4Qe4qcIuiBQeB22eXWEISukH3C2Wg
+    insecure: true 
+querier:
+  stores:
+    - kube-prometheus-kube-prome-thanos-discovery:10901
+  service:
+    type: ClusterIP
+    ports:
+      http: 9090
+    nodePorts:
+      http: "31254"
+    cplusterIP: ""
+bucketweb:
+  enabled: true
+compactor:
+  enabled: true
+storegateway:
+  enabled: true
+ruler:
+  enabled: false

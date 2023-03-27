@@ -1,0 +1,6 @@
+type: s3
+config:
+  bucket: thanos
+  endpoint: minio.hanhorang.link
+  access_key: lHM4rvFtJlTh3va0
+  secret_key: oYi4Qe4qcIuiBQeB22eXWEISukH3C2Wgd
