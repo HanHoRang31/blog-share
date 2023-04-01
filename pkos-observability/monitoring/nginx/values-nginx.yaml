@@ -1,0 +1,10 @@
+metrics:
+  enabled: true
+
+  service:
+    port: 9113
+
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    interval: 10s
