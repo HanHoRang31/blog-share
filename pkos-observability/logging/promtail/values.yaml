@@ -212,10 +212,16 @@ defaultVolumeMounts:
     readOnly: true
 
 # Extra volumes to be added in addition to those specified under `defaultVolumes`.
-extraVolumes: []
+extraVolumes: 
+  - name: temp-logs
+    hostPath:
+      path: /var/log/temp
 
 # Extra volume mounts together. Corresponds to `extraVolumes`.
-extraVolumeMounts: []
+extraVolumeMounts:
+  - name: temp-logs
+    mountPath: /var/log/temp
+    readOnly: true
 
 # Extra args for the Promtail container.
 extraArgs: []
@@ -435,6 +441,13 @@ config:
 
     scrapeConfigs: |
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
+      - job_name: localsystem
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              job: varlogs
+              __path__: /var/log/temp/*.log
       - job_name: kubernetes-pods
         pipeline_stages:
           {{- toYaml .Values.config.snippets.pipelineStages | nindent 4 }}

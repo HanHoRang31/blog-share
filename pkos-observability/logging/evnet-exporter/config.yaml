@@ -1,0 +1,9 @@
+config: |
+  logLevel: info
+  route:
+    routes:
+      - match:
+          - receiver: "dump"
+  receivers:
+    - name: "dump"
+      stdout: {}
