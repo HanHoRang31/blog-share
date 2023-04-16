@@ -146,8 +146,15 @@ loki:
     {{ include "loki.rulerConfig" . }}
 
     table_manager:
-      retention_deletes_enabled: false
-      retention_period: 0
+      retention_deletes_enabled: true
+      retention_period: 336h
+      index_tables_provisioning:
+        provisioned_write_throughput: 5
+        provisioned_read_throughput: 5
+      chunk_tables_provisioning:
+        provisioned_write_throughput: 5
+        provisioned_read_throughput: 5
+        
 
     {{- with .Values.loki.memcached.results_cache }}
     query_range:
@@ -223,14 +230,16 @@ loki:
       admin: admin
     type: s3
     s3:
-      s3: null
-      endpoint: null
-      region: null
-      secretAccessKey: null
-      accessKeyId: null
+      s3: han-loki
+      endpoint: s3.ap-northeast-2.amazonaws.com
+      region: ap-northeast-2
+      secretAccessKey: 
+      accessKeyId: 
       s3ForcePathStyle: false
       insecure: false
       http_config: {}
+      dynamodb:
+        dynamodb_url: dynamodb://loki_@ap-northeast-2
     gcs:
       chunkBufferSize: 0
       requestTimeout: "0s"
@@ -260,7 +269,15 @@ loki:
       timeout: "500ms"
       default_validity: "12h"
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
-  schemaConfig: {}
+  schemaConfig:
+    configs:
+    - from: "2022-01-11"
+      store: aws 
+      object_store: s3
+      schema: v12
+      index:
+        prefix: loki_
+
   # -- Check https://grafana.com/docs/loki/latest/configuration/#ruler for more info on configuring ruler
   rulerConfig: {}
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
@@ -273,6 +290,15 @@ loki:
       at: "250ms"
       max_per_second: 20
       up_to: 3
+    aws:
+      s3: s3.ap-northeast-2.amazonaws.com
+      bucketnames: han-loki
+      region: ap-northeast-2 
+      access_key_id: 
+      secret_access_key: 
+      dynamodb:
+        dynamodb_url: dynamodb://@ap-northeast-2
+
   # --  Optional compactor configuration
   compactor: {}
   # --  Optional analytics configuration

@@ -1,34 +1,3 @@
-schema_config:
-  configs:
-  - from: 2020-05-15
-    store: aws
-    object_store: s3
-    schema: v11
-    index:
-      prefix: loki
-      period: 0
-
-storage_config:
-  aws:
-    s3: s3://ap-northeast-2/han-loki
-    dynamodb:
-      dynamodb_url: dynamodb://ap-northeast-2
-
-table_manager:
-  retention_deletes_enabled: true
-  retention_period: 336h
-  index_tables_provisioning:
-    write_scale:
-      enabled: false
-    read_scale:
-      enabled: false
-  chunk_tables_provisioning:
-    write_scale:
-      enabled: false
-    read_scale:
-      enabled: false
-  table_prefix: "loki"
-
 
 tableManager:
   enabled: true
@@ -45,18 +14,3 @@ monitoring:
 
 loki: 
   auth_enabled: false
-  storage:
-    bucketNames:
-      chunks: han-loki
-      ruler: han-loki
-      admin: han-loki
-    type: s3
-    s3:
-      s3: han-loki
-      endpoint: s3.ap-northeast-2.amazonaws.com
-      region: ap-northeast-2
-      secretAccessKey: 
-      accessKeyId: 
-      s3ForcePathStyle: false
-      insecure: false
-      http_config: {}
