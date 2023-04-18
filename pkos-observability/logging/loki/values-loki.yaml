@@ -4,13 +4,13 @@ tableManager:
 
 
 test:
-  enabled: false
+  enabled: true
 
 monitoring:
   lokiCanary:
     enabled: true
   selfMonitoring:
-    enabled: false
+    enabled: true
 
 loki: 
   auth_enabled: false

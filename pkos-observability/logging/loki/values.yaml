@@ -238,8 +238,6 @@ loki:
       s3ForcePathStyle: false
       insecure: false
       http_config: {}
-      dynamodb:
-        dynamodb_url: dynamodb://loki_@ap-northeast-2
     gcs:
       chunkBufferSize: 0
       requestTimeout: "0s"
@@ -291,13 +289,9 @@ loki:
       max_per_second: 20
       up_to: 3
     aws:
-      s3: s3.ap-northeast-2.amazonaws.com
-      bucketnames: han-loki
-      region: ap-northeast-2 
-      access_key_id: 
-      secret_access_key: 
+      s3: s3://<AWS-ACCESS-KEY>:<AWS-SECRET-KEY>@ap-northeast-2/han-loki
       dynamodb:
-        dynamodb_url: dynamodb://@ap-northeast-2
+        dynamodb_url: dynamodb:///<AWS-ACCESS-KEY>:<AWS-SECRET-KEY>@ap-northeast-2
 
   # --  Optional compactor configuration
   compactor: {}
