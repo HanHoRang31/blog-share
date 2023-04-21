@@ -30,8 +30,8 @@ persistence:
     s3: 
       region: ap-northeast-2
       bucket: registry 
-      accesskey: e5ROI1njKV19gJwQ
-      secretkey: hnWDsgIMNvmDNOwtEPp93pwIm2aOH5f2
+      accesskey: 9Ld70AKmD32x6oqY
+      secretkey: MZHCzjDMqprHbtGbGF6K95rd4n4ZCHCy
       regionendpoint: http://minio.minio.svc.cluster.local:9000
 
 core:
