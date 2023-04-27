@@ -1,0 +1,29 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-eks
+  region: ap-northeast-2 
+
+vpc:
+  id: vpc-06210c8560709c761
+  cidr: 192.168.0.0/16
+  subnets:
+    private:
+      ap-northeast-2a:
+        id: subnet-0cceb4f7117a82214
+        cidr: 192.168.3.0/24
+      ap-northeast-2c:
+        id: subnet-0c19b6b58320fce0a
+        cidr: 192.168.4.0/24
+  nat:
+    gateway: HighlyAvailable # other options: Disable, Single (default)
+  clusterEndpoints:
+    publicAccess: false # 외부 접속 차단
+    privateAccess: true # 내부 VPC 접근만 허용 
+
+nodeGroups:
+  - name: EKS-PRIVATE-NODE
+    instanceType: t3.medium
+    desiredCapacity: 2
+    privateNetworking: true # # privateAccess: true 인 경우 true로 설정 
