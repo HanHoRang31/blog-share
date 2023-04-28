@@ -1,0 +1,25 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-eks
+  region: ap-northeast-2
+  version: "1.25"  
+
+vpc:
+  nat:
+    gateway: HighlyAvailable
+  clusterEndpoints:
+    publicAccess: false # 외부 접속 차단
+    privateAccess: true  # 내부 VPC 접근만 허용 
+
+nodeGroups:
+  - name: ng-1
+    instanceType: t3.medium
+    desiredCapacity: 2
+    privateNetworking: true # # privateAccess: true 인 경우 true로 설정
+    subnets:
+      - private-2a
+      - private-2c 
+    ssh:
+      publicKeyName: eks-terraform-key 

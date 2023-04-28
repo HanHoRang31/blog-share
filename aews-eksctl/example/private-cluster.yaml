@@ -3,27 +3,48 @@ kind: ClusterConfig
 
 metadata:
   name: my-eks
-  region: ap-northeast-2 
+  region: ap-northeast-2
+  version: "1.25"  
 
 vpc:
   id: vpc-06210c8560709c761
   cidr: 192.168.0.0/16
+  securityGroup: sg-05ff4d3541d72d7dc
+  nat:
+    gateway: HighlyAvailable
+
   subnets:
+    public: 
+      public-2a:
+        id: subnet-023a838543987d725
+        cidr: 192.168.1.0/24
+      public-2c:
+        id: subnet-09e710a10ef0fb5ef
+        cidr: 192.168.2.0/24
     private:
-      ap-northeast-2a:
+      private-2a:
         id: subnet-0cceb4f7117a82214
         cidr: 192.168.3.0/24
-      ap-northeast-2c:
+      private-2c:
         id: subnet-0c19b6b58320fce0a
         cidr: 192.168.4.0/24
-  nat:
-    gateway: HighlyAvailable # other options: Disable, Single (default)
   clusterEndpoints:
     publicAccess: false # 외부 접속 차단
-    privateAccess: true # 내부 VPC 접근만 허용 
+    privateAccess: true  # 내부 VPC 접근만 허용 
 
 nodeGroups:
-  - name: EKS-PRIVATE-NODE
+  - name: ng-2
     instanceType: t3.medium
     desiredCapacity: 2
-    privateNetworking: true # # privateAccess: true 인 경우 true로 설정 
+    privateNetworking: true # # privateAccess: true 인 경우 true로 설정
+    subnets:
+      - private-2a
+      - private-2c 
+    ssh:
+      publicKeyName: eks-terraform-key
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
+
