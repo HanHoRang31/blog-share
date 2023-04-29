@@ -7,44 +7,47 @@ metadata:
   version: "1.25"  
 
 vpc:
-  id: vpc-06210c8560709c761
+  id: vpc-05a960a0837da1328
   cidr: 192.168.0.0/16
-  securityGroup: sg-05ff4d3541d72d7dc
+  securityGroup: sg-0c59ddf1a9a73edc9
   nat:
     gateway: HighlyAvailable
 
   subnets:
     public: 
       public-2a:
-        id: subnet-023a838543987d725
+        id: subnet-06391e7ab56a8ae9c
         cidr: 192.168.1.0/24
       public-2c:
-        id: subnet-09e710a10ef0fb5ef
+        id: subnet-00c193bd6e515a79b
         cidr: 192.168.2.0/24
     private:
       private-2a:
-        id: subnet-0cceb4f7117a82214
+        id: subnet-02d592518f7ae0755
         cidr: 192.168.3.0/24
       private-2c:
-        id: subnet-0c19b6b58320fce0a
+        id: subnet-0dcfc3b165e7b355d
         cidr: 192.168.4.0/24
+
   clusterEndpoints:
-    publicAccess: false # 외부 접속 차단
-    privateAccess: true  # 내부 VPC 접근만 허용 
+    publicAccess: false 
+    privateAccess: true 
 
 nodeGroups:
-  - name: ng-2
-    instanceType: t3.medium
-    desiredCapacity: 2
-    privateNetworking: true # # privateAccess: true 인 경우 true로 설정
-    subnets:
-      - private-2a
-      - private-2c 
+  - name: ng-1
+    instanceType: m5.xlarge
+    desiredCapacity: 3
+    privateNetworking: true 
     ssh:
       publicKeyName: eks-terraform-key
+    availabilityZones:
+      - ap-northeast-2a
+      - ap-northeast-2c
     iam:
-      attachPolicyARNs:
-        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
-        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
-        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
-
+      withAddonPolicies:
+        imageBuilder: true 
+        albIngress: true  
+        cloudWatch: true 
+        autoScaler: true 
+    instanceName: EKS-WORKER-TEST
+    volumeSize: 30
