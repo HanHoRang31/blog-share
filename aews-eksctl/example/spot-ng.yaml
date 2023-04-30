@@ -1,0 +1,30 @@
+# An example of ClusterConfig showing nodegroups with mixed instances (spot and on demand):
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-eks
+  region: ap-northeast-2
+
+nodeGroups:
+- name: spot-1
+  minSize: 0  
+  maxSize: 2 
+  instancesDistribution:
+    maxPrice: 0.017
+    instanceTypes: ["t3.small", "t3.medium"] # At least one instance type should be specified
+    onDemandBaseCapacity: 0
+    onDemandPercentageAboveBaseCapacity: 50
+    spotInstancePools: 2
+
+managedNodeGroups:
+- name: spot-m1
+  instanceTypes: ["c3.large","c4.large","c5.large","c5d.large","c5n.large","c5a.large"]
+  spot: true
+  desiredCapacity: 1
+
+# `instanceTypes` defaults to [`m5.large`]
+- name: spot-m2
+  spot: true
+  desiredCapacity: 1
