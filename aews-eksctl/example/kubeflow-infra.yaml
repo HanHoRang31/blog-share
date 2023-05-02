@@ -30,17 +30,21 @@ metadata:
 # Add all possible AZs to ensure nodes can be spun up in any AZ later on. 
 # THIS CAN'T BE CHANGED LATER. YOU WILL HAVE TO CREATE A NEW CLUSTER TO ADD NEW AZ SUPPORT.
 # This list applies to the whole cluster and isn't specific to nodegroups
-availabilityZones: ["ap-northeast-2a" ,  "ap-northeast-2c"]
+availabilityZones: ["ap-northeast-2a", "ap-northeast-2c"]
 
+iam: 
+  withOIDC: true
 nodeGroups:
   - name: ng-1
-    desiredCapacity: 2
+    desiredCapacity: 5
     minSize: 0
-    maxSize: 3
+    maxSize: 10
+    ami: ami-0a2a74934366c9715
     # Set one nodegroup with 100GB volumes for Kubeflow to get deployed. 
     # Kubeflow requirement states 1-2 Nodes with 100GB volume attached to the node. 
     volumeSize: 100
     volumeType: gp2
+    amiFamily: Ubuntu1804
     instanceType: m6g.xlarge
     availabilityZones: ["ap-northeast-2a"]
     labels:
@@ -58,13 +62,16 @@ nodeGroups:
         autoScaler: true
         cloudWatch: true
         efs: true
+        ebs: true 
         externalDNS: true
 
   - name: ng-2
     desiredCapacity: 0
     volumeType: gp2
     instanceType: m6g.xlarge
+    amiFamily: Ubuntu1804  
     availabilityZones: ["ap-northeast-2a"]
+    ami: ami-0a2a74934366c9715
     labels:
       node-class: "worker-node"
     tags:
@@ -80,11 +87,14 @@ nodeGroups:
         autoScaler: true
         cloudWatch: true
         efs: true
+        ebs: true 
         externalDNS: true
 
   - name: 1-gpu-spot-p2-xlarge
     minSize: 0
     maxSize: 10
+    ami: ami-0a2a74934366c9715
+    amiFamily: Ubuntu1804
     instancesDistribution:
       # set your own max price. AWS spot instance prices no longer cross OnDemand price. 
       # Comment out the field to default to OnDemand as max price. 
@@ -118,11 +128,14 @@ nodeGroups:
         cloudWatch: true
         albIngress: true
         efs: true
+        ebs: true 
         externalDNS: true
 
   - name: 1-gpu-spot-p3-2xlarge
     minSize: 0
     maxSize: 10
+    amiFamily: Ubuntu1804  
+    ami: ami-0a2a74934366c9715  
     instancesDistribution:
       # set your own max price. AWS spot instance prices no longer cross OnDemand price. 
       # Comment out the field to default to OnDemand as max price. 
@@ -156,11 +169,14 @@ nodeGroups:
         cloudWatch: true
         albIngress: true
         efs: true
+        ebs: true 
         externalDNS: true
 
   - name: 4-gpu-spot-p3-8xlarge
     minSize: 0
     maxSize: 4
+    amiFamily: Ubuntu1804  
+    ami: ami-0a2a74934366c9715  
     instancesDistribution:
       # set your own max price. AWS spot instance prices no longer cross OnDemand price. 
       # Comment out the field to default to OnDemand as max price. 
@@ -192,7 +208,17 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
         cloudWatch: true
-        albIngress: true
+        awsLoadBalancerController: true
         efs: true
+        ebs: true 
         externalDNS: true
 
+addons:
+- name: vpc-cni # no version is specified so it deploys the default version
+  version: v1.12.6-eksbuild.1
+  attachPolicyARNs:
+    - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+- name: kube-proxy
+  version: latest # auto discovers the latest available
+- name: coredns
+  version: latest # v1.9.3-eksbuild.2
