@@ -1,0 +1,22 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: temp
+  region: ap-northeast-2
+
+managedNodeGroups:
+  - name: c6g-xlarge-nodes
+    instanceType: c6g.xlarge
+    amiFamily: Ubuntu2004
+    minSize: 1
+    maxSize: 4
+    desiredCapacity: 3
+
+  - name: p2-xlarge-nodes
+    instanceType: p2.2xlarge
+    amiFamily: Ubuntu2004
+    minSize: 1
+    maxSize: 4
+    desiredCapacity: 3
+

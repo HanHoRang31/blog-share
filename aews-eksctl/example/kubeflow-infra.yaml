@@ -30,23 +30,55 @@ metadata:
 # Add all possible AZs to ensure nodes can be spun up in any AZ later on. 
 # THIS CAN'T BE CHANGED LATER. YOU WILL HAVE TO CREATE A NEW CLUSTER TO ADD NEW AZ SUPPORT.
 # This list applies to the whole cluster and isn't specific to nodegroups
-availabilityZones: ["ap-northeast-2a", "ap-northeast-2c"]
+vpc:
+  id: vpc-09bb4e5dc1d8791f6
+  cidr: 192.168.0.0/16
+  securityGroup: sg-00c186d53d16e1a87
+  nat:
+    gateway: HighlyAvailable
+
+  subnets:
+    public: 
+      public-2a:
+        id: subnet-0266a97ff1254c127
+        cidr: 192.168.1.0/24
+      public-2c:
+        id: subnet-0982147d7a21eb5e1
+        cidr: 192.168.2.0/24
+    private:
+      private-2a:
+        id: subnet-0a1847997a8f47298
+        cidr: 192.168.3.0/24
+      private-2c:
+        id: subnet-009891004ba140f4b
+        cidr: 192.168.4.0/24
 
 iam: 
   withOIDC: true
+
 nodeGroups:
   - name: ng-1
-    desiredCapacity: 5
+    desiredCapacity: 1
     minSize: 0
     maxSize: 10
-    ami: ami-0a2a74934366c9715
     # Set one nodegroup with 100GB volumes for Kubeflow to get deployed. 
     # Kubeflow requirement states 1-2 Nodes with 100GB volume attached to the node. 
     volumeSize: 100
     volumeType: gp2
-    amiFamily: Ubuntu1804
-    instanceType: m6g.xlarge
-    availabilityZones: ["ap-northeast-2a"]
+    amiFamily: Ubuntu2004
+    ami: ami-00209b76ce83d5a0c
+    instanceType: c5n.xlarge
+    overrideBootstrapCommand: |
+      #!/bin/bash
+      source /var/lib/cloud/scripts/eksctl/bootstrap.helper.sh
+      export NODE_LABELS="role=kubeflow,instance-type=m5.xlarge,availability-zone=ap-northeast-2a,node-class=worker-node”
+      # Note "--node-labels=${NODE_LABELS}" needs the above helper sourced to work, otherwise will have to be defined manually.
+      /etc/eks/bootstrap.sh my-eks-kubeflow  --container-runtime containerd --kubelet-extra-args "--node-labels=${NODE_LABELS}"
+    privateNetworking: true 
+    ssh:
+      publicKeyName: eks-terraform-key
+    availabilityZones:
+      - ap-northeast-2a
     labels:
       node-class: "worker-node"
     tags:
@@ -58,43 +90,25 @@ nodeGroups:
       k8s.io/cluster-autoscaler/my-eks-kubeflow: "owned"
     iam:
       withAddonPolicies:
-        albIngress: true
+        awsLoadBalancerController: true
         autoScaler: true
         cloudWatch: true
         efs: true
         ebs: true 
         externalDNS: true
 
-  - name: ng-2
-    desiredCapacity: 0
-    volumeType: gp2
-    instanceType: m6g.xlarge
-    amiFamily: Ubuntu1804  
-    availabilityZones: ["ap-northeast-2a"]
-    ami: ami-0a2a74934366c9715
-    labels:
-      node-class: "worker-node"
-    tags:
-      # EC2 tags required for cluster-autoscaler auto-discovery
-      k8s.io/cluster-autoscaler/node-template/label/lifecycle: OnDemand
-      k8s.io/cluster-autoscaler/node-template/label/aws.amazon.com/spot: "false"
-      k8s.io/cluster-autoscaler/node-template/label/gpu-count: "0"
-      k8s.io/cluster-autoscaler/enabled: "true"
-      k8s.io/cluster-autoscaler/my-eks-kubeflow: "owned"
-    iam:
-      withAddonPolicies:
-        albIngress: true
-        autoScaler: true
-        cloudWatch: true
-        efs: true
-        ebs: true 
-        externalDNS: true
 
   - name: 1-gpu-spot-p2-xlarge
     minSize: 0
     maxSize: 10
-    ami: ami-0a2a74934366c9715
-    amiFamily: Ubuntu1804
+    amiFamily: Ubuntu2004
+    ami: ami-00209b76ce83d5a0c
+    overrideBootstrapCommand: |
+      #!/bin/bash
+      source /var/lib/cloud/scripts/eksctl/bootstrap.helper.shi
+      export NODE_LABELS="role=kubeflow,instance-type=m5.xlarge,availability-zone=ap-northeast-2a,lifecycle=ec2spot,aws.amazon.com/spot=true,gpu-count=1”
+      # Note "--node-labels=${NODE_LABELS}" needs the above helper sourced to work, otherwise will have to be defined manually.
+      /etc/eks/bootstrap.sh my-eks-kubeflow --container-runtime containerd --kubelet-extra-args "--node-labels=${NODE_LABELS}"
     instancesDistribution:
       # set your own max price. AWS spot instance prices no longer cross OnDemand price. 
       # Comment out the field to default to OnDemand as max price. 
@@ -110,7 +124,11 @@ nodeGroups:
     # Stick to one AZ for all GPU nodes. 
     # In case of termination, this will prevent volumes from being unavailable 
     # if the new instance got spun up in another AZ.
-    availabilityZones: ["ap-northeast-2a"]
+    privateNetworking: true 
+    ssh:
+      publicKeyName: eks-terraform-key
+    availabilityZones:
+      - ap-northeast-2a
     taints:
       - key: spotInstance
         value: "true"
@@ -126,7 +144,7 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
         cloudWatch: true
-        albIngress: true
+        awsLoadBalancerController: true
         efs: true
         ebs: true 
         externalDNS: true
@@ -134,8 +152,14 @@ nodeGroups:
   - name: 1-gpu-spot-p3-2xlarge
     minSize: 0
     maxSize: 10
-    amiFamily: Ubuntu1804  
-    ami: ami-0a2a74934366c9715  
+    amiFamily: Ubuntu2004
+    ami: ami-00209b76ce83d5a0c
+    overrideBootstrapCommand: |
+      #!/bin/bash
+      source /var/lib/cloud/scripts/eksctl/bootstrap.helper.sh
+      export NODE_LABELS="role=kubeflow,instance-type=m5.xlarge,availability-zone=ap-northeast-2a,lifecycle=ec2spot,aws.amazon.com/spot=true,gpu-count=1”
+      # Note "--node-labels=${NODE_LABELS}" needs the above helper sourced to work, otherwise will have to be defined manually.
+      /etc/eks/bootstrap.sh my-eks-kubeflow --container-runtime containerd --kubelet-extra-args "--node-labels=${NODE_LABELS}"
     instancesDistribution:
       # set your own max price. AWS spot instance prices no longer cross OnDemand price. 
       # Comment out the field to default to OnDemand as max price. 
@@ -151,7 +175,11 @@ nodeGroups:
     # Stick to one AZ for all GPU nodes. 
     # In case of termination, this will prevent volumes from being unavailable 
     # if the new instance got spun up in another AZ.
-    availabilityZones: ["ap-northeast-2a"]
+    privateNetworking: true 
+    ssh:
+      publicKeyName: eks-terraform-key
+    availabilityZones:
+      - ap-northeast-2a
     taints:
       - key: spotInstance
         value: "true"
@@ -167,7 +195,7 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
         cloudWatch: true
-        albIngress: true
+        awsLoadBalancerController: true
         efs: true
         ebs: true 
         externalDNS: true
@@ -175,8 +203,14 @@ nodeGroups:
   - name: 4-gpu-spot-p3-8xlarge
     minSize: 0
     maxSize: 4
-    amiFamily: Ubuntu1804  
-    ami: ami-0a2a74934366c9715  
+    amiFamily: Ubuntu2004  
+    ami: ami-00209b76ce83d5a0c
+    overrideBootstrapCommand: |
+      #!/bin/bash
+      source /var/lib/cloud/scripts/eksctl/bootstrap.helper.sh
+      export NODE_LABELS="role=kubeflow,instance-type=m5.xlarge,availability-zone=ap-northeast-2a,lifecycle=ec2spot,aws.amazon.com/spot=true,gpu-count=4”
+      # Note "--node-labels=${NODE_LABELS}" needs the above helper sourced to work, otherwise will have to be defined manually.
+      /etc/eks/bootstrap.sh my-eks-kubeflow --container-runtime containerd --kubelet-extra-args "--node-labels=${NODE_LABELS}"
     instancesDistribution:
       # set your own max price. AWS spot instance prices no longer cross OnDemand price. 
       # Comment out the field to default to OnDemand as max price. 
@@ -192,7 +226,11 @@ nodeGroups:
     # Stick to one AZ for all GPU nodes. 
     # In case of termination, this will prevent volumes from being unavailable 
     # if the new instance got spun up in another AZ.
-    availabilityZones: ["ap-northeast-2a"]
+    privateNetworking: true 
+    ssh:
+      publicKeyName: eks-terraform-key
+    availabilityZones:
+      - ap-northeast-2a
     taints:
       - key: spotInstance
         value: "true"
