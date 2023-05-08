@@ -1,0 +1,12 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: gp3
+allowVolumeExpansion: true
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  type: gp3
+  allowAutoIOPSPerGBIncrease: 'true'
+  encrypted: 'true'
+  #fsType: ext4 # 기본값이 ext4 이며 xfs 등 변경 가능 >> 단 스냅샷 경우 ext4를 기본으로하여 동작하여 xfs 사용 시 문제가 될 수 있음 - 테스트해보자
