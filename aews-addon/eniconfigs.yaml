@@ -1,29 +1,27 @@
+# eniconfigs.yaml
 apiVersion: crd.k8s.amazonaws.com/v1alpha1
 kind: ENIConfig
 metadata:
-  name: ap-noratheast-2a-custom
+  name: ap-northeast-2a
 spec:
   securityGroups:
-    - sg-06df41086aae5e7be
-    - sg-0efcb2855e78369ff
-  subnet: subnet-03efbc23352a1d8bb
+    - sg-0db212244a3e72ae1
+  subnet: subnet-06daaaa9fa3990545
 ---
 apiVersion: crd.k8s.amazonaws.com/v1alpha1
 kind: ENIConfig
 metadata:
-  name: ap-noratheast-2b-custom
+  name: ap-northeast-2b
 spec:
   securityGroups:
-    - sg-06df41086aae5e7be
-    - sg-0efcb2855e78369ff
-  subnet: subnet-0b260af7f40a90b99 
+    - sg-0db212244a3e72ae1
+  subnet: subnet-0a498cbb63e30d085 
 ---
 apiVersion: crd.k8s.amazonaws.com/v1alpha1
 kind: ENIConfig
 metadata:
-  name: ap-noratheast-2c-custom
+  name: ap-northeast-2c
 spec:
   securityGroups:
-    - sg-06df41086aae5e7be
-    - sg-0efcb2855e78369ff
-  subnet: subnet-0a123d96c9374e858
+    - sg-0db212244a3e72ae1
+  subnet: subnet-03de86c554113fec7
