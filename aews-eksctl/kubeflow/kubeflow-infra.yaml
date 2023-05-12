@@ -31,26 +31,26 @@ metadata:
 # THIS CAN'T BE CHANGED LATER. YOU WILL HAVE TO CREATE A NEW CLUSTER TO ADD NEW AZ SUPPORT.
 # This list applies to the whole cluster and isn't specific to nodegroups
 vpc:
-  id: vpc-04686564a10b92c9c
+  id: vpc-087b8cfcd070759f9
   cidr: 192.168.0.0/16
-  securityGroup: sg-0ea8529af823353e9
+  securityGroup: sg-0e8ffa104e0b0555f
   nat:
     gateway: HighlyAvailable
 
   subnets:
     public: 
       public-2a:
-        id: subnet-03eeb6d32aa5397bf
+        id: subnet-04a6b29dcc0875697
         cidr: 192.168.1.0/24
       public-2c:
-        id: subnet-023bc1a3fce0cde07
+        id: subnet-0804fc16166c916ac
         cidr: 192.168.2.0/24
     private:
       private-2a:
-        id: subnet-02c160be5273d5171
+        id: subnet-04c631064fdf0e217
         cidr: 192.168.3.0/24
       private-2c:
-        id: subnet-018a370a44f973ac4
+        id: subnet-02276a65240a897d3
         cidr: 192.168.4.0/24
 
 iam: 
