@@ -1,0 +1,48 @@
+alertmanager:
+  enabled: false 
+
+grafana:
+  defaultDashboardsTimezone: Asia/Seoul
+  adminPassword: admin1234
+
+  ingress:
+    enabled: true
+    ingressClassName: alb
+
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:955963799952:certificate/7569648c-bfd5-4860-b2c1-16ef02acbb58
+      alb.ingress.kubernetes.io/success-codes: 200-399
+      alb.ingress.kubernetes.io/group.name: "monitoring"
+
+    hosts:
+      - grafana.hanhorang.link
+
+    paths:
+      - /*
+
+prometheus:
+   # 사이드카 노출 서비스 설정
+  thanosService:
+    enabled: true
+
+  ingress:
+    enabled: true
+    ingressClassName: alb
+
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:955963799952:certificate/7569648c-bfd5-4860-b2c1-16ef02acbb58
+      alb.ingress.kubernetes.io/success-codes: 200-399
+      alb.ingress.kubernetes.io/group.name: "monitoring"
+
+    hosts:
+      - prometheus.hanhorang.link
+
+    paths:
+      - /*
+
