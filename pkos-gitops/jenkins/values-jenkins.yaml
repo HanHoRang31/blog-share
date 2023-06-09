@@ -2,7 +2,13 @@ controller:
   adminUser: "admin"
   adminPassword: "admin1234"
   jenkinsUriPrefix: "/jenkins"
-    #installPlugins:
+  installPlugins:
+  - kubernetes
+  - workflow-aggregator
+  - git
+  - configuration-as-code
+  - pipeline-stage-view
+  - gitlab
     #- kubernetes:3734.v1fa_4c724c3b_7
     #- workflow-aggregator:590.v6a_d052e5a_a_b_5
     #- git:4.13.0

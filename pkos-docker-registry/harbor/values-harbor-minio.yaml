@@ -1,3 +1,5 @@
+#values-harbor.yaml 
+# network 설정
 expose:
   tls:
     certSource: none
@@ -11,10 +13,10 @@ expose:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:955963799952:certificate/7569648c-bfd5-4860-b2c1-16ef02acbb58
+      alb.ingress.kubernetes.io/certificate-arn: {ACM arn 입력}
 
 externalURL: https://harbor.hanhorang.link
-
+# Storage 설정 
 persistence:
   persistentVolumeClaim:
     registry:
@@ -23,7 +25,17 @@ persistence:
       storageClass: "kops-csi-1-21"
     database:
       storageClass: "kops-csi-1-21"
+   
+  imageChartStorage:
+    disableredirect: true
+    type: s3 
+    s3: 
+      region: ap-northeast-2
+      bucket: registry 
+      accesskey: <minio-access-key>
+      secretkey: <minio-secret-key>
+      regionendpoint: http://minio.minio.svc.cluster.local:9000
 
-
+# HA 
 core:
   replicas: 3
