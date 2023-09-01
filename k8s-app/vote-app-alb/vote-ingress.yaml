@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vote-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    external-dns.alpha.kubernetes.io/hostname: hanhorang.link
+    external-dns.alpha.kubernetes.io/set-identifier: vote
+    external-dns.alpha.kubernetes.io/aws-weight: '1'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /vote
+            pathType: Prefix
+            backend:
+              service:
+                name: vote
+                port:
+                  number: 5000
+
