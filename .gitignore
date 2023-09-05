@@ -4,7 +4,7 @@ credentials*
 
 ## terraform 
 # Local .terraform directories
-.terraform*
+.terraform.*
 **/.terraform/*
 
 # .tfstate files
