@@ -102,8 +102,7 @@ module "eks" {
       desired_size = 2
 
       instance_types = ["t3.medium"]
-      key_name = "shhan" 
-
+      
       labels = {
         WorkerType    = "ON_DEMAND"
         NodeGroupType = "core"
