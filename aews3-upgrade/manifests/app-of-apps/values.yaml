@@ -1,0 +1,21 @@
+spec:
+  destination:
+    # HIGHLIGHT
+    server: https://kubernetes.default.svc
+  source:
+    # HIGHLIGHT
+    repoURL: https://git-codecommit.us-west-2.amazonaws.com/v1/repos/eks-gitops-repo
+    # HIGHLIGHT
+    targetRevision: main
+
+# HIGHLIGHT
+applications:
+  - name: assets
+  - name: carts
+  - name: catalog
+  - name: checkout
+  - name: orders
+  - name: other
+  - name: rabbitmq
+  - name: ui
+  - name: karpenter
