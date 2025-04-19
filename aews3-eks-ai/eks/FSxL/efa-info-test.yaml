@@ -1,0 +1,81 @@
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: efa-info-test
+spec:
+  runPolicy:
+    cleanPodPolicy: Running
+    backoffLimit: 20
+  slotsPerWorker: 8
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+         spec:
+          restartPolicy: OnFailure
+          tolerations:
+          - key: "nvidia.com/gpu"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+          containers:
+          - image: public.ecr.aws/hpc-cloud/nccl-tests:latest
+            name: efa-info-test-launcher
+            imagePullPolicy: IfNotPresent
+            env:
+             - name: LD_LIBRARY_PATH
+               value: "/opt/amazon/openmpi/lib:/opt/nccl/build/lib:/opt/amazon/efa/lib:/opt/aws-ofi-nccl/install/lib:/usr/local/nvidia/lib"
+             - name: PATH
+               value: "/opt/amazon/efa/bin:/usr/bin"
+             - name: XLA_FLAGS
+               value: "--xla_gpu_cuda_data_dir=/usr/local/cuda"
+             - name: TF_XLA_FLAGS
+               value: "--tf_xla_cpu_global_jit"
+             - name: NCCL_DEBUG
+               value: INFO
+            command:
+            - /opt/amazon/openmpi/bin/mpirun
+            - --allow-run-as-root
+            - --tag-output
+            - -np
+            - "16"
+            - -bind-to
+            - none
+            - -map-by
+            - slot
+            - -x
+            - PATH
+            - -x
+            - LD_LIBRARY_PATH
+            - -x
+            - XLA_FLAGS
+            - -x
+            - TF_XLA_FLAGS
+            - -x
+            - NCCL_DEBUG=INFO
+            - --mca
+            - pml
+            - ^cm
+            - --mca
+            - pml_rsh_agent=ssh
+            - --oversubscribe
+            - /opt/amazon/efa/bin/fi_info
+            - -p
+            - "efa"
+            - -t
+            - "FI_EP_RDM"
+    Worker:
+      replicas: 2
+      template:
+        spec:
+          containers:
+          - image: public.ecr.aws/hpc-cloud/nccl-tests:latest
+            name: efa-info-test-worker
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                nvidia.com/gpu: 8
+                vpc.amazonaws.com/efa: 32
+              requests:
+                nvidia.com/gpu: 8
+                vpc.amazonaws.com/efa: 32

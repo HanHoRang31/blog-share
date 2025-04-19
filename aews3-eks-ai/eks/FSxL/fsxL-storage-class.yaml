@@ -1,0 +1,14 @@
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+    name: fsx-lustre-sc
+provisioner: fsx.csi.aws.com
+parameters:
+  subnetId: subnet-01eb9c2da48387f55
+  securityGroupIds: sg-0f7cb9cc2f759e7c8
+  deploymentType: SCRATCH_2
+  fileSystemTypeVersion: "2.15"
+mountOptions:
+  - flock
+
